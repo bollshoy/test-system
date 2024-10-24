@@ -19,9 +19,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        # Используйте npm ci, если у вас есть package-lock.json, иначе замените на npm install
-        run: npm ci || npm install
+      - name: Clean cache and install dependencies
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm install
 
       - name: Build project
         run: npm run build
