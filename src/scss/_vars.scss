@@ -1,0 +1,21 @@
+:root {
+  --containerWidth: 1420px;
+  --containerPadding: 20px;
+
+  --black: #000000;
+  --white: #ffffff;
+  --background-main: #e5e5e5;
+  --background-header: #b0b0b0;
+  --first-color: #cfdef3;
+  --second-color: #434343;
+  --thrid-color: #0000FF;
+
+  --border-radius: 15px;
+}
+
+@mixin container {
+  max-width: var(--containerWidth);
+  padding: 0 var(--containerPadding);
+  align-items: center;
+  margin: 0 auto;
+}
