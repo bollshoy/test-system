@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import './_Navbar.scss';
-import {auth} from "../../firebase/firebase.js";
+import {auth} from "../../../firebase.js";
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);

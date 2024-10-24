@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {HashRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
 import Login from "./pages/Login/Login.jsx";
-import {auth} from "./firebase/firebase.js";
+import {auth} from "../firebase.js";
 import Home from "./pages/Home/Home.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import {ToastContainer} from "react-toastify";

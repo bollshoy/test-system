@@ -1,5 +1,5 @@
 import {doc, getDoc} from 'firebase/firestore';
-import {auth, db} from "../../firebase/firebase.js";
+import {auth, db} from "../../../firebase.js";
 
 export const PROFILE_REQUEST = 'PROFILE_REQUEST';
 export const PROFILE_SUCCESS = 'PROFILE_SUCCESS';

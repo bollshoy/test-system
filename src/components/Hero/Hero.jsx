@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import './_Hero.scss'
 import {NavLink, useNavigate} from 'react-router-dom'
-import {auth} from "../../firebase/firebase.js";
+import {auth} from "../../../firebase.js";
 
 const Hero = () => {
 	const [user, setUser] = useState(null)

@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth, db } from '../../firebase/firebase.js';
+import { auth, db } from '../../../firebase.js';
 import { doc, setDoc } from 'firebase/firestore';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';

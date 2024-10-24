@@ -1,6 +1,6 @@
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { getAuth, fetchSignInMethodsForEmail } from 'firebase/auth';
-import { auth, db } from '../../firebase/firebase.js';
+import { auth, db } from '../../../firebase.js';
 import { doc, setDoc } from 'firebase/firestore';
 import {toast} from "react-toastify";
 

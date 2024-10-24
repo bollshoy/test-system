@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail } from 'firebase/auth';
-import {auth} from "../../firebase/firebase.js";
+import {auth} from "../../../firebase.js";
 import {toast} from "react-toastify";
 
 export const resetPassword = (email) => {

@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {db, auth} from "../../firebase/firebase.js";
+import {db, auth} from "../../../firebase.js";
 import {doc, getDoc} from "firebase/firestore";
 import {toast} from "react-toastify";
 import Header from "../../components/Header/Header.jsx";
