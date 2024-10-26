@@ -8,8 +8,8 @@ import {ToastContainer} from "react-toastify";
 import Loading from "./components/Loading/Loading.jsx";
 import Register from "./pages/Register/Register.jsx";
 import Olympiads from "./pages/Olympiads/Olympiads.jsx";
-import './scss/style.css';
 import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
+import './scss/style.css';
 
 const App = () => {
 	const [user, setUser] = useState(null);

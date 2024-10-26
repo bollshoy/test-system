@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {NavLink, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from "react-redux";
-import {login} from "../../redux/action/authAction.js";
+import {login} from "@/redux/action/authAction.js";
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import 'react-toastify/dist/ReactToastify.css';
 import {eye} from 'react-icons-kit/feather/eye'

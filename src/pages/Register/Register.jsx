@@ -15,6 +15,7 @@ const Register = () => {
 	const [lname, setLname] = useState('');
 	const [type, setType] = useState('password');
 	const [icon, setIcon] = useState(eyeOff);
+	const [phone, setPhone] = useState('+380');
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -38,8 +39,8 @@ const Register = () => {
 			return;
 		}
 
-		dispatch(register(email, password, lname, fname));
-	}, [dispatch, email, password, fname, lname]);
+		dispatch(register(email, password, lname, fname, phone));
+	}, [dispatch, email, password, fname, lname, phone]);
 
 
 	useEffect(() => {
@@ -58,6 +59,16 @@ const Register = () => {
 	const handleToggle = useCallback(() => {
 		setType(prevType => prevType === 'password' ? 'text' : 'password');
 		setIcon(prevIcon => prevIcon === eyeOff ? eye : eyeOff);
+	}, []);
+
+	const handleChange = useCallback((e) => {
+		const newValue = e.target.value;
+
+		if (newValue === '' || newValue.startsWith('+380')) {
+			setPhone(newValue);
+		} else {
+			e.preventDefault();
+		}
 	}, []);
 
 	return (<div className="register">
@@ -102,6 +113,15 @@ const Register = () => {
 							className='form__input'
 							value={fname}
 							onChange={(e) => setFname(e.target.value)}
+					/>
+				</div>
+				<div className="fname__form form__item">
+					<label htmlFor="phone">Номер телефону</label>
+					<input
+							type="text"
+							className='form__input'
+							value={phone}
+							onChange={handleChange}
 					/>
 				</div>
 				<NavLink to='/login' className='register__link'>Вхід</NavLink>

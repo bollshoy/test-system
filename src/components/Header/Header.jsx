@@ -1,6 +1,6 @@
 import React from 'react'
 import Navbar from '../Navbar/Navbar.jsx'
-import logo from '../../assets/logo.jpg';
+import logo from '@/assets/logo.jpg';
 import './_Header.scss'
 
 const Header = () => {

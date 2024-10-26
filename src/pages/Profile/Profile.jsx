@@ -2,9 +2,9 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {db, auth} from "../../../firebase.js";
 import {doc, getDoc} from "firebase/firestore";
-import {toast} from "react-toastify";
 import Header from "../../components/Header/Header.jsx";
 import Loading from "../../components/Loading/Loading.jsx";
+import {toast} from "react-toastify";
 import './_Profile.scss'
 
 const Profile = () => {
@@ -40,7 +40,8 @@ const Profile = () => {
 		return () => unsubscribe();
 	}, [])
 
-	const handleLogount = async () => {
+	const handleLogout = async (e) => {
+		e.preventDefault();
 		if (isLoggingOut) return;
 		setIsLoggingOut(true);
 
@@ -59,19 +60,18 @@ const Profile = () => {
 				<section className="profile">
 					<div className="profile__container container">
 						{userDetails ? (
-								<>
-									<div className="profile__left">
-									</div>
-									<div className="profile__right">
-										<h3 className="profile__title">Вітаємо {userDetails.firstName}!</h3>
+								<div className={'profile__content'}>
+									<h3 className="profile__title">Вітаємо {userDetails.firstName}!</h3>
+									<div className="profile__content-item">
 										<p className="profile__item">Email: {userDetails.email}</p>
+										<p className="profile__item">Телефон: {userDetails.phone}</p>
 										<p className="profile__item">Прізвище: {userDetails.firstName}</p>
 										<p className="profile__item">Ім'я: {userDetails.lastName}</p>
-										<div className="profile__btn" onClick={handleLogount}>
+										<div className="profile__btn" onClick={handleLogout}>
 											<button disabled={isLoggingOut}>Вийти</button>
 										</div>
 									</div>
-								</>
+								</div>
 						) : (
 								<div><Loading/></div>
 						)}

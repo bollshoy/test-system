@@ -6,7 +6,7 @@ export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAILURE = 'REGISTER_FAILURE';
 
-export const register = (email, password, lastName, firstName) => {
+export const register = (email, password, lastName, firstName, phone) => {
 	return async (dispatch) => {
 		dispatch({ type: REGISTER_REQUEST });
 		try {
@@ -16,12 +16,12 @@ export const register = (email, password, lastName, firstName) => {
 			await setDoc(doc(db, 'User', user.uid), {
 				lastName,
 				firstName,
+				phone,
 				email: user.email,
 			});
 
 			dispatch({ type: REGISTER_SUCCESS });
 		} catch (error) {
-			console.error("Registration error: ", error);
 			dispatch({ type: REGISTER_FAILURE, payload: error.message });
 		}
 	};
