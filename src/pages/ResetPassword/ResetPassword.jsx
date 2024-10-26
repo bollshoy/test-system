@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {resetPassword} from "../../redux/action/resetPassword.js";
-import './_ResetPassword.scss'
+import {resetPassword} from "@/redux/action/resetPassword.js";
 import {NavLink} from "react-router-dom";
+import './_ResetPassword.scss'
 
 const ResetPassword = () => {
 	const [email, setEmail] = useState('');

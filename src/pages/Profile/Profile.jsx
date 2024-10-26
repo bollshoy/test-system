@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {db, auth} from "../../../firebase.js";
+import {db, auth} from "/firebase.js";
 import {doc, getDoc} from "firebase/firestore";
-import Header from "../../components/Header/Header.jsx";
-import Loading from "../../components/Loading/Loading.jsx";
+import Header from "@/components/Header/Header.jsx";
+import Loading from "@/components/Loading/Loading.jsx";
 import {toast} from "react-toastify";
 import './_Profile.scss'
 

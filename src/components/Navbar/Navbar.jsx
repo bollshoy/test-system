@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
+import {auth} from "/firebase.js";
 import './_Navbar.scss';
-import {auth} from "../../../firebase.js";
 
 const Navbar = () => {
 	const [open, setOpen] = useState(false);
@@ -33,7 +33,6 @@ const Navbar = () => {
 						<NavLink to="/olympiads" className="header__link">Олімпіади</NavLink>
 					</li>
 
-					{/* Если пользователь авторизован, показываем "Профиль", иначе показываем кнопки "Реєстрація" и "Авторизація" */}
 					{user ? (
 							<li>
 								<NavLink to="/profile" className="header__link">Профіль</NavLink>

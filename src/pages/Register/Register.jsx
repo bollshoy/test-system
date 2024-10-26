@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import {register} from "../../redux/action/registerAction.js";
+import {register} from "@/redux/action/registerAction.js";
 import {NavLink, useNavigate} from "react-router-dom";
 import {eyeOff} from 'react-icons-kit/feather/eyeOff';
 import {useSelector, useDispatch} from "react-redux";
