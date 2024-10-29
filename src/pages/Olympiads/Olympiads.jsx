@@ -1,10 +1,11 @@
 import React from 'react';
 
 const Olympiads = () => {
-	return (
-			<div>
-			</div>
-	);
+    return (
+        <div>
+            Soon
+        </div>
+    );
 };
 
 export default Olympiads;
