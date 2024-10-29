@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {doc, getDoc} from "firebase/firestore";
 import Header from "@/components/Header/Header.jsx";
 import Loading from "@/components/Loading/Loading.jsx";
@@ -73,7 +73,7 @@ const Profile = () => {
                             </div>
                         </div>
                     ) : (
-                        <div><Loading/></div>
+                        <Loading/>
                     )}
                 </div>
             </section>

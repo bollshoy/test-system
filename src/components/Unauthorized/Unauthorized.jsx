@@ -3,8 +3,9 @@ import React from 'react';
 const Unauthorized = () => {
     return (
         <div>
-            <h1>Unauthorized Access</h1>
-            <p>You do not have permission to access this page.</p>
+            <span>
+                Несанкціонований доступ. У вас немає дозволу на перегляд цієї сторінки.
+            </span>
         </div>
     );
 };

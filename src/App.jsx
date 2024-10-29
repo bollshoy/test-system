@@ -37,7 +37,6 @@ const App = () => {
     if (loading) {
         return <Loading/>;
     }
-    console.log("User Role:", userRole);
     return (
         <Router>
             <Routes>

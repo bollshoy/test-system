@@ -1,17 +1,28 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {collection, getDocs, updateDoc, doc, deleteDoc} from 'firebase/firestore';
+import Loading from "@/components/Loading/Loading.jsx";
+import {fetchUserRole} from "../../redux/action/roleAction.js";
 import {toast} from 'react-toastify';
 import {db} from '/firebase';
-import loading from "../../components/Loading/Loading.jsx";
-import Loading from "../../components/Loading/Loading.jsx";
+import './_AdminPanel.scss';
 
 const AdminPanel = () => {
+    const dispatch = useDispatch();
+    const userRole = useSelector(state => state.role.role);
     const [users, setUsers] = useState([]);
-    const userRole = useSelector(state => state.role);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const getUserRole = async () => {
+            await dispatch(fetchUserRole());
+        };
+        getUserRole();
+    }, [dispatch]);
 
     useEffect(() => {
         const fetchUsers = async () => {
+            setLoading(true);
             try {
                 const querySnapshot = await getDocs(collection(db, 'User'));
                 const userList = querySnapshot.docs.map(doc => ({
@@ -21,6 +32,8 @@ const AdminPanel = () => {
                 setUsers(userList);
             } catch (error) {
                 console.error('Ошибка при загрузке пользователей:', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchUsers();
@@ -29,10 +42,11 @@ const AdminPanel = () => {
     const handleRoleChange = async (userId, newRole) => {
         try {
             await updateDoc(doc(db, 'User', userId), {role: newRole});
-            setUsers(users.map(user => user.id === userId ? {...user, role: newRole} : user));
-            toast.success('Роль успішно оновлена!');
+            setUsers(prevUsers => prevUsers.map(user => user.id === userId ? {...user, role: newRole} : user));
+            toast.success('Роль успешно обновлена!');
         } catch (error) {
-            toast.error('Помилка при оновлені ролі');
+            console.error('Error:', error);
+            toast.error('Ошибка при обновлении роли');
         }
     };
 
@@ -42,48 +56,46 @@ const AdminPanel = () => {
         setUsers(users.filter(user => user.id !== userId));
     };
 
-    const handleBanUser = async (userId) => {
-        const userRef = doc(db, 'User', userId);
-        await updateDoc(userRef, { banned: true });
-        setUsers(users.map(user => (user.id === userId ? { ...user, banned: true } : user)));
-    };
-
     if (loading) {
-        return <Loading/>
+        return <Loading/>;
     }
+
     return userRole === 'admin' ? (
-        <div>
-            <h2>Админ-панель</h2>
-            <table>
-                <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Имя</th>
-                    <th>Роль</th>
-                    <th>Действия</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map(user => (
-                    <tr key={user.id}>
-                        <td>{user.email}</td>
-                        <td>{user.firstName} {user.lastName}</td>
-                        <td>
-                            <select
-                                value={user.role}
-                                onChange={(e) => handleRoleChange(user.id, e.target.value)}>
-                                <option value="user">user</option>
-                                <option value="admin">admin</option>
-                            </select>
-                        </td>
-                        <td>
-                            <button onClick={() => handleDeleteUser(user.id)}>Удалить</button>
-                            <button onClick={() => handleBanUser(user.id)}>Заблокировать</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+        <div className={'adminPanel'}>
+            <div className="adminPanel__container container">
+                <h3 className={'adminPanel__title'}>Админ-панель</h3>
+                <div className="adminPanel__content">
+                    <table className={'adminPanel__table'}>
+                        <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>Ім'я та прізвище</th>
+                            <th>Роль</th>
+                            <th>Дія</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {users.map(user => (
+                            <tr key={user.id}>
+                                <td>{user.email}</td>
+                                <td>{user.firstName} {user.lastName}</td>
+                                <td>
+                                    <select
+                                        value={user.role}
+                                        onChange={(e) => handleRoleChange(user.id, e.target.value)}>
+                                        <option value="user">user</option>
+                                        <option value="admin">admin</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button onClick={() => handleDeleteUser(user.id)}>Видалити</button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     ) : (
         <div>У вас нет доступа к этой странице!</div>
