@@ -4,18 +4,19 @@ import {useSelector, useDispatch} from 'react-redux';
 import {fetchUserRole} from './redux/action/roleAction.js';
 
 import Login from "./pages/Login/Login.jsx";
-import {auth} from "/firebase.js";
 import Home from "./pages/Home/Home.jsx";
 import Profile from "./pages/Profile/Profile.jsx";
 import {ToastContainer} from "react-toastify";
 import Loading from "./components/Loading/Loading.jsx";
 import Register from "./pages/Register/Register.jsx";
-import Olympiads from "./pages/Olympiads/Olympiads.jsx";
 import ResetPassword from "./pages/ResetPassword/ResetPassword.jsx";
 import AdminPanel from "./pages/AdminPanel/AdminPanel.jsx";
 import Unauthorized from "./components/Unauthorized/Unauthorized.jsx";
-import './scss/style.css';
 
+import {auth} from "/firebase.js";
+
+import './scss/style.css';
+import Testing from "@/pages/Testing/Testing.jsx";
 
 const App = () => {
     const [user, setUser] = useState(null);
@@ -43,10 +44,10 @@ const App = () => {
                 <Route path="/" element={user ? <Home/> : <Navigate to="/login"/>}/>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
-                <Route path="/olympiads" element={<Olympiads/>}/>
+                <Route path="/testing" element={<Testing/>}/>
                 <Route path="/profile" element={user ? <Profile/> : <Navigate to="/login"/>}/>
                 <Route path="/reset" element={<ResetPassword/>}/>
-                <Route path="/admin" element={userRole === 'admin' ? <AdminPanel /> : <Navigate to="/unauthorized" />} />
+                <Route path="/admin" element={userRole === 'admin' ? <AdminPanel/> : <Navigate to="/unauthorized"/>}/>
                 <Route path="/unauthorized" element={<Unauthorized/>}/>
             </Routes>
             <ToastContainer

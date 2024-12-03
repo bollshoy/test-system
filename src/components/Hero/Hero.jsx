@@ -17,7 +17,7 @@ const Hero = () => {
 	
 	const handleClick = () => {
 		if(user) {
-			navigate('/olympiads')
+			navigate('/tests')
 		} else {
 			navigate('/register')
 		}

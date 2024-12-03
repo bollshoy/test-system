@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {collection, getDocs, updateDoc, doc, deleteDoc} from 'firebase/firestore';
 import Loading from "@/components/Loading/Loading.jsx";

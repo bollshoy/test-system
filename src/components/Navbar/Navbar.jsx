@@ -30,7 +30,7 @@ const Navbar = () => {
 						<NavLink to="/" className="header__link">Головна</NavLink>
 					</li>
 					<li>
-						<NavLink to="/olympiads" className="header__link">Олімпіади</NavLink>
+						<NavLink to="/testing" className="header__link">Тести</NavLink>
 					</li>
 
 					{user ? (
@@ -47,9 +47,6 @@ const Navbar = () => {
 								</li>
 							</>
 					)}
-					<li>
-						<NavLink to="/contact" className="header__link">Контакти</NavLink>
-					</li>
 				</ul>
 			</nav>
 	);

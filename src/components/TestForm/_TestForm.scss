@@ -1,0 +1,134 @@
+.testForm {
+  .testForm__container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+
+    .test-form {
+      display: flex;
+      flex-direction: column;
+
+      &__input {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+
+        &:focus {
+          border-color: #007bff;
+          outline: none;
+        }
+      }
+
+      &__question {
+        margin-bottom: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 15px;
+        background: #f9f9f9;
+
+        &-label {
+          font-weight: bold;
+          margin-bottom: 10px;
+          display: block;
+        }
+
+        &__answers {
+          margin-top: 10px;
+
+          &__answer {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+
+            &-label {
+              margin-right: 10px;
+            }
+
+            &-input {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+
+      &__remove-answer-button,
+      &__remove-question-button,
+      &__add-answer-button,
+      &__add-question-button,
+      &__submit-button,
+      &__delete-button {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background 0.3s;
+
+        &.test-form__remove-answer-button {
+          background: #ff4d4d;
+          color: #fff;
+
+          &:hover {
+            background: #e63939;
+          }
+        }
+
+        &.test-form__remove-question-button {
+          background: #ff4d4d;
+          color: #fff;
+
+          &:hover {
+            background: #e63939;
+          }
+        }
+
+        &.test-form__add-answer-button {
+          background: #28a745;
+          color: #fff;
+          margin-top: 10px;
+          margin-bottom: 10px;
+
+          &:hover {
+            background: #218838;
+          }
+        }
+
+        &.test-form__add-question-button {
+          background: #007bff;
+          color: #fff;
+          margin-top: 20px;
+
+          &:hover {
+            background: #0056b3;
+          }
+        }
+
+        &.test-form__submit-button {
+          background: #007bff;
+          color: #fff;
+          margin-top: 20px;
+
+          &:hover {
+            background: #0056b3;
+          }
+        }
+
+        &.test-form__delete-button {
+          background: #dc3545;
+          color: #fff;
+          margin-top: 10px;
+
+          &:hover {
+            background: #c82333;
+          }
+        }
+      }
+    }
+  }
+}

@@ -50,12 +50,6 @@ const Register = () => {
         }
     }, [isRegistered, navigate]);
 
-    useEffect(() => {
-        if (error) {
-            toast.error(error);
-        }
-    }, [error]);
-
     const handleToggle = useCallback(() => {
         setType(prevType => prevType === 'password' ? 'text' : 'password');
         setIcon(prevIcon => prevIcon === eyeOff ? eye : eyeOff);
