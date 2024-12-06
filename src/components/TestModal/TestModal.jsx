@@ -3,7 +3,7 @@ import './_TestModal.scss';
 
 const TestModal = ({ isOpen, onRequestClose, test }) => {
     if (!test || !Array.isArray(test.questions)) {
-        return <div>Ошибка: данные теста недоступны или имеют неправильный формат.</div>;
+        return <div>Error: Test data is unavailable or has an incorrect format.</div>;
     }
 
     const [answers, setAnswers] = useState(Array(test.questions.length).fill(null));
@@ -14,7 +14,7 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
 
     useEffect(() => {
         if (isOpen) {
-            setStartTime(new Date()); // Устанавливаем время начала
+            setStartTime(new Date());
         }
     }, [isOpen]);
 
@@ -27,14 +27,14 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const endTime = new Date();
-        const duration = Math.floor((endTime - startTime) / 1000); // Рассчитываем длительность
+        const duration = Math.floor((endTime - startTime) / 1000);
         setElapsedTime(duration);
 
         const correctAnswers = test.questions.map((q) => q.correctAnswerIndex);
         const results = answers.map((answer, index) => ({
             question: test.questions[index].question,
-            userAnswer: answer !== null ? test.questions[index].answers[answer] : 'Немає відповіді',
-            correctAnswer: correctAnswers[index] !== undefined ? test.questions[index].answers[correctAnswers[index]] : 'Немає відповіді',
+            userAnswer: answer !== null ? test.questions[index].answers[answer] : 'No answer',
+            correctAnswer: correctAnswers[index] !== undefined ? test.questions[index].answers[correctAnswers[index]] : 'No answer',
             isCorrect: answer === correctAnswers[index],
         }));
 
@@ -77,29 +77,39 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
                                         </label>
                                     </div>
                                 ))}
+                                <div className="modal__images">
+                                    {question.images && question.images.map((image, imageIndex) => (
+                                        <img
+                                            key={imageIndex}
+                                            src={`http://localhost:3000/uploads/${image}`}
+                                            alt={`Question ${questionIndex + 1} Image ${imageIndex + 1}`}
+                                            className="modal__question-image"
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         ))}
-                        <button type="submit" className="modal__submit-button">Відправити</button>
+                        <button type="submit" className="modal__submit-button">Submit</button>
                     </form>
                 ) : (
                     <div className="modal__results">
-                        <h3 className="modal__results-title">Результати</h3>
-                        <p className="modal__success-rate">Показник успішності: {calculateSuccessRate()}%</p>
+                        <h3 className="modal__results-title">Results</h3>
+                        <p className="modal__success-rate">Success Rate: {calculateSuccessRate()}%</p>
                         {elapsedTime !== null && (
                             <p className="modal__elapsed-time">
-                                Ви пройшли тест за <span>{Math.floor(elapsedTime / 60)}</span> хвилин <span>{elapsedTime % 60}</span> секунд.
+                                You completed the test in <span>{Math.floor(elapsedTime / 60)}</span> minutes <span>{elapsedTime % 60}</span> seconds.
                             </p>
                         )}
                         <ul className="modal__results-list">
                             {results.map((result, index) => (
                                 <li key={index} className="modal__result-item">
-                                    <strong className="modal__result-question">Питання:</strong>
+                                    <strong className="modal__result-question">Question:</strong>
                                     <span className="modal__question-text">{result.question}</span>
                                     <br />
-                                    <strong className="modal__result-user-answer">Ваша відповідь:</strong>
+                                    <strong className="modal__result-user-answer">Your answer:</strong>
                                     <span className="modal__user-answer">{result.userAnswer}</span>
                                     <br />
-                                    <strong className="modal__result-correct-answer">Правильна відповідь:</strong>
+                                    <strong className="modal__result-correct-answer">Correct answer:</strong>
                                     <span className="modal__correct-answer">{result.correctAnswer}</span>
                                     <br />
                                 </li>
@@ -113,3 +123,4 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
 };
 
 export default TestModal;
+

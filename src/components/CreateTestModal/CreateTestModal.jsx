@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import './_CreateTestModal.scss'; // Стилей для модального окна
+import axios from 'axios';
+import './_CreateTestModal.scss';
 
 const CreateTestModal = ({ isOpen, onClose, addTest }) => {
-    const [name, setName] = useState('');  // Стейт для имени теста
-    const [questions, setQuestions] = useState([{ question: '', answers: [''], correctAnswerIndex: null }]);  // Стейт для вопросов теста
+    const [name, setName] = useState('');
+    const [questions, setQuestions] = useState([{ question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
+    const [files, setFiles] = useState({});
 
     const handleAddQuestion = () => {
-        setQuestions([...questions, { question: '', answers: [''], correctAnswerIndex: null }]);
+        setQuestions([...questions, { question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
     };
 
     const handleAddAnswer = (index) => {
@@ -33,25 +35,59 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
         setQuestions(newQuestions);
     };
 
-    const handleSubmit = (e) => {
+    const handleFileChange = (e, questionIndex) => {
+        setFiles({
+            ...files,
+            [questionIndex]: e.target.files,
+        });
+    };
+
+    const uploadFiles = async (questionIndex) => {
+        if (!files[questionIndex]) return [];
+
+        const formData = new FormData();
+        for (const file of files[questionIndex]) {
+            formData.append('photos', file);
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3000/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            return response.data.files.map(file => file.filename);
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            return [];
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!name || questions.some(q => !q.question || q.answers.length === 0 || q.correctAnswerIndex === null)) {
             alert('Please fill in all fields correctly.');
             return;
         }
 
-        const testData = { name, questions };
-        addTest(testData);  // Добавление нового теста через колбэк
-        resetForm();  // Сброс формы
-        onClose();  // Закрытие модального окна
+        const updatedQuestions = await Promise.all(questions.map(async (q, index) => {
+            const uploadedFiles = await uploadFiles(index);
+            return { ...q, images: uploadedFiles };
+        }));
+
+        const testData = { name, questions: updatedQuestions };
+        addTest(testData);
+        resetForm();
+        onClose();
     };
 
     const resetForm = () => {
         setName('');
-        setQuestions([{ question: '', answers: [''], correctAnswerIndex: null }]);
+        setQuestions([{ question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
+        setFiles({});
     };
 
-    if (!isOpen) return null;  // Если модальное окно не открыто, не рендерим его
+    if (!isOpen) return null;
 
     return (
         <div className="modal-overlay">
@@ -60,7 +96,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                 <form onSubmit={handleSubmit} className="modal__form">
                     <input
                         type="text"
-                        placeholder="Название теста"
+                        placeholder="Test Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -70,7 +106,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                         <div key={questionIndex} className="modal__question">
                             <input
                                 type="text"
-                                placeholder="Питання"
+                                placeholder="Question"
                                 value={q.question}
                                 onChange={(e) => {
                                     const newQuestions = [...questions];
@@ -91,11 +127,11 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                                 onChange={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
                                                 className="modal__answer-input"
                                             />
-                                            Вірна відповідь
+                                            Correct Answer
                                         </label>
                                         <input
                                             type="text"
-                                            placeholder={`Відповідь ${String.fromCharCode(65 + answerIndex)}`}
+                                            placeholder={`Answer ${String.fromCharCode(65 + answerIndex)}`}
                                             value={answer}
                                             onChange={(e) => {
                                                 const newQuestions = [...questions];
@@ -110,7 +146,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                             onClick={() => handleRemoveAnswer(questionIndex, answerIndex)}
                                             className="modal__remove-answer-button"
                                         >
-                                            Видалити відповідь
+                                            Remove Answer
                                         </button>
                                     </div>
                                 ))}
@@ -119,15 +155,21 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                     onClick={() => handleAddAnswer(questionIndex)}
                                     className="modal__add-answer-button"
                                 >
-                                    Додати відповідь
+                                    Add Answer
                                 </button>
                             </div>
+                            <input
+                                type="file"
+                                multiple
+                                onChange={(e) => handleFileChange(e, questionIndex)}
+                                className="modal__file-input"
+                            />
                             <button
                                 type="button"
                                 onClick={() => handleRemoveQuestion(questionIndex)}
                                 className="modal__remove-question-button"
                             >
-                                Видалити питання
+                                Remove Question
                             </button>
                         </div>
                     ))}
@@ -136,10 +178,10 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                         onClick={handleAddQuestion}
                         className="modal__add-question-button"
                     >
-                        Додати питання
+                        Add Question
                     </button>
                     <button type="submit" className="modal__submit-button">
-                        Створити тест
+                        Create Test
                     </button>
                 </form>
             </div>
