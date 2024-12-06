@@ -1,0 +1,99 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+
+  &__add-question-button {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  &__answer-label {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  &__remove-answer-button,
+  &__remove-question-button{
+    background: #dc3545;
+    color: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+
+  &__add-answer-button {
+    background: #218838;
+    color: var(--white);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+}
+
+.modal__close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__input {
+  margin: 15px;
+  padding: 10px;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 20px;
+  border: 1.5px solid var(--second-color);
+  border-radius: var(--border-radius);
+  transition: .3s ease;
+
+  &:focus {
+    transition: .3s ease;
+    border: 1.5px solid #007bff;
+  }
+}
+
+.modal__add-question-button,
+.modal__submit-button {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.modal__add-question-button:hover,
+.modal__submit-button:hover {
+  background-color: #0056b3;
+}

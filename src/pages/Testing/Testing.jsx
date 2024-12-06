@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import TestForm from "@/components/TestForm/TestForm.jsx";
+import React, {useEffect, useState} from 'react';
 import TestList from "@/components/TestList/TestList.jsx";
 import TestModal from "@/components/TestModal/TestModal.jsx";
+import CreateTestModal from "@/components/CreateTestModal/CreateTestModal.jsx";
 import axios from "axios";
 import Header from "@/components/Header/Header.jsx";
+import {toast} from 'react-toastify';
 
 const Testing = () => {
     const [tests, setTests] = useState([]);
-    const [editingTest, setEditingTest] = useState(null);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [currentTest, setCurrentTest] = useState(null);
+    const [createTestModalOpen, setCreateTestModalOpen] = useState(false);
+    const [testCode, setTestCode] = useState(''); // Состояние для хранения кода теста
+    const [foundTest, setFoundTest] = useState(null); // Состояние для найденного теста
 
     useEffect(() => {
         fetchTests();
@@ -21,19 +24,25 @@ const Testing = () => {
     };
 
     const addTest = async (newTest) => {
-        await axios.post('http://localhost:3000/tests', newTest);
-        fetchTests();
-    };
-
-    const updateTest = async (updatedTest) => {
-        await axios.put(`http://localhost:3000/tests/${updatedTest.id}`, updatedTest);
-        fetchTests();
-        setEditingTest(null);
+        try {
+            await axios.post('http://localhost:3000/tests', newTest);
+            fetchTests();
+        } catch (error) {
+            if (error.response && error.response.data && error.response.data.error) {
+                toast.error(error.response.data.error);
+            } else {
+                toast.error('Произошла ошибка при создании теста.');
+            }
+        }
     };
 
     const deleteTest = async (id) => {
-        await axios.delete(`http://localhost:3000/tests/${id}`);
-        fetchTests();
+        try {
+            await axios.delete(`http://localhost:3000/tests/${id}`);
+            fetchTests();
+        } catch (error) {
+            console.error('Ошибка при удалении теста:', error);
+        }
     };
 
     const openModal = (test) => {
@@ -46,19 +55,48 @@ const Testing = () => {
         setCurrentTest(null);
     };
 
+    const openCreateTestModal = () => {
+        setCreateTestModalOpen(true);
+    };
+
+    const closeCreateTestModal = () => {
+        setCreateTestModalOpen(false);
+    };
+
+    const handleSearchTest = async () => {
+        const found = tests.find(test => test.code === testCode);
+        if (found) {
+            setCurrentTest(found);
+            setModalIsOpen(true); // Открываем модальное окно с найденным тестом
+        } else {
+            toast.error('Тест с таким кодом не найден.'); // Уведомление, если тест не найден
+        }
+    };
+
     return (
         <>
             <Header/>
-            <TestForm
-                addTest={addTest}
-                updateTest={updateTest}
-                deleteTest={deleteTest}
-                editingTest={editingTest}
-            />
+            <div className="test-header">
+                <h2 className="test-list__title">Список тестів</h2>
+                <button
+                    className="create-test-button"
+                    onClick={openCreateTestModal}
+                >
+                    Створити тест
+                </button>
+            </div>
+            <div className="search-test">
+                <input
+                    type="text"
+                    placeholder="Введите код теста"
+                    value={testCode}
+                    onChange={(e) => setTestCode(e.target.value)}
+                />
+                <button onClick={handleSearchTest}>Продолжить</button>
+            </div>
             <TestList
                 tests={tests}
                 deleteTest={deleteTest}
-                setEditingTest={setEditingTest}
                 openModal={openModal}
             />
             {currentTest && (
@@ -66,6 +104,21 @@ const Testing = () => {
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}
                     test={currentTest}
+                />
+            )}
+            {createTestModalOpen && (
+                <CreateTestModal
+                    isOpen={createTestModalOpen}
+                    onClose={closeCreateTestModal}
+                    addTest={addTest}
+                    existingTests={tests}
+                />
+            )}
+            {foundTest && (
+                <TestModal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    test={foundTest}
                 />
             )}
         </>

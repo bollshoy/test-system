@@ -96,6 +96,18 @@
   background-color: #0056b3;
 }
 
+.modal__elapsed-time {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+
+  span {
+    font-weight: 700;
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
 .modal__results {
   margin-top: 20px;
 }

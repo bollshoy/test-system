@@ -1,18 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import './_TestForm.scss';
+import React, { useState } from 'react';
+import './_CreateTestModal.scss'; // Стилей для модального окна
 
-const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
-    const [name, setName] = useState('');
-    const [questions, setQuestions] = useState([
-        { question: '', answers: [''], correctAnswerIndex: null }
-    ]);
-
-    useEffect(() => {
-        if (editingTest) {
-            setName(editingTest.name || '');
-            setQuestions(editingTest.questions || [{ question: '', answers: [''], correctAnswerIndex: null }]);
-        }
-    }, [editingTest]);
+const CreateTestModal = ({ isOpen, onClose, addTest }) => {
+    const [name, setName] = useState('');  // Стейт для имени теста
+    const [questions, setQuestions] = useState([{ question: '', answers: [''], correctAnswerIndex: null }]);  // Стейт для вопросов теста
 
     const handleAddQuestion = () => {
         setQuestions([...questions, { question: '', answers: [''], correctAnswerIndex: null }]);
@@ -50,21 +41,9 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
         }
 
         const testData = { name, questions };
-
-        if (editingTest) {
-            updateTest({ ...testData, id: editingTest.id });
-        } else {
-            addTest(testData);
-        }
-
-        resetForm();
-    };
-
-    const handleDeleteTest = () => {
-        if (editingTest && editingTest.id) {
-            deleteTest(editingTest.id);
-            resetForm();
-        }
+        addTest(testData);  // Добавление нового теста через колбэк
+        resetForm();  // Сброс формы
+        onClose();  // Закрытие модального окна
     };
 
     const resetForm = () => {
@@ -72,20 +51,23 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
         setQuestions([{ question: '', answers: [''], correctAnswerIndex: null }]);
     };
 
+    if (!isOpen) return null;  // Если модальное окно не открыто, не рендерим его
+
     return (
-        <section className="testForm">
-            <div className="testForm__container container">
-                <form onSubmit={handleSubmit} className="test-form">
+        <div className="modal-overlay">
+            <div className="modal">
+                <button onClick={onClose} className="modal__close-button">&times;</button>
+                <form onSubmit={handleSubmit} className="modal__form">
                     <input
                         type="text"
-                        placeholder="Назва тесту"
+                        placeholder="Название теста"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
-                        className="test-form__input test-form__input--name"
+                        className="modal__input modal__input--name"
                     />
                     {questions.map((q, questionIndex) => (
-                        <div key={questionIndex} className="test-form__question">
+                        <div key={questionIndex} className="modal__question">
                             <input
                                 type="text"
                                 placeholder="Питання"
@@ -96,20 +78,20 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
                                     setQuestions(newQuestions);
                                 }}
                                 required
-                                className="test-form__input test-form__input--question"
+                                className="modal__input modal__input--question"
                             />
-                            <div className="test-form__answers">
+                            <div className="modal__answers">
                                 {q.answers.map((answer, answerIndex) => (
-                                    <div key={answerIndex} className="test-form__answer">
-                                        <label className="test-form__answer-label">
+                                    <div key={answerIndex} className="modal__answer">
+                                        <label className="modal__answer-label">
                                             <input
                                                 type="radio"
                                                 name={`correct-answer-${questionIndex}`}
                                                 checked={q.correctAnswerIndex === answerIndex}
                                                 onChange={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
-                                                className="test-form__answer-input"
+                                                className="modal__answer-input"
                                             />
-                                            Правильна відповідь
+                                            Вірна відповідь
                                         </label>
                                         <input
                                             type="text"
@@ -121,12 +103,12 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
                                                 setQuestions(newQuestions);
                                             }}
                                             required
-                                            className="test-form__input test-form__input--answer"
+                                            className="modal__input modal__input--answer"
                                         />
                                         <button
                                             type="button"
                                             onClick={() => handleRemoveAnswer(questionIndex, answerIndex)}
-                                            className="test-form__remove-answer-button"
+                                            className="modal__remove-answer-button"
                                         >
                                             Видалити відповідь
                                         </button>
@@ -135,7 +117,7 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
                                 <button
                                     type="button"
                                     onClick={() => handleAddAnswer(questionIndex)}
-                                    className="test-form__add-answer-button"
+                                    className="modal__add-answer-button"
                                 >
                                     Додати відповідь
                                 </button>
@@ -143,7 +125,7 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
                             <button
                                 type="button"
                                 onClick={() => handleRemoveQuestion(questionIndex)}
-                                className="test-form__remove-question-button"
+                                className="modal__remove-question-button"
                             >
                                 Видалити питання
                             </button>
@@ -152,27 +134,17 @@ const TestForm = ({ addTest, updateTest, deleteTest, editingTest }) => {
                     <button
                         type="button"
                         onClick={handleAddQuestion}
-                        className="test-form__add-question-button"
+                        className="modal__add-question-button"
                     >
                         Додати питання
                     </button>
-                    <button type="submit" className="test-form__submit-button">
-                        {editingTest ? 'Оновити тест' : 'Додати тест'}
+                    <button type="submit" className="modal__submit-button">
+                        Створити тест
                     </button>
-                    {editingTest && (
-                        <button
-                            type="button"
-                            onClick={handleDeleteTest}
-                            className="test-form__delete-button"
-                        >
-                            Видалити тест
-                        </button>
-                    )}
                 </form>
             </div>
-        </section>
+        </div>
     );
 };
 
-export default TestForm;
-
+export default CreateTestModal;
