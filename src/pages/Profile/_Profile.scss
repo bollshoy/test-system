@@ -31,6 +31,24 @@
     font-size: 22px;
     line-height: 28px;
     color: var(--second-color);
+    border: 1px solid var(--black);
+    padding: 10px;
+    border-radius: var(--border-radius);
+    display: flex;
+    margin: 8px;
+  }
+
+  &__admin-button {
+    padding: 10px 36px;
+    width: 100%;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+    background: var(--thrid-color);
   }
 
   &__btn {
@@ -52,6 +70,31 @@
       transition: background-color 0.3s;
       background: var(--thrid-color);
     }
+  }
+
+  &__test-results {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    p {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 26px;
+    }
+  }
+
+  &__test-result {
+    margin-bottom: 20px;
+  }
+
+  &__subtitle {
+    font-weight: 700;
+    font-size: 42px;
+    line-height: 48px;
+    margin-top: 50px;
+
   }
 }
 

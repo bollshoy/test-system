@@ -11,8 +11,7 @@ const Testing = () => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [currentTest, setCurrentTest] = useState(null);
     const [createTestModalOpen, setCreateTestModalOpen] = useState(false);
-    const [testCode, setTestCode] = useState(''); // Состояние для хранения кода теста
-    const [foundTest, setFoundTest] = useState(null); // Состояние для найденного теста
+    const [foundTest, setFoundTest] = useState(null);
 
     useEffect(() => {
         fetchTests();
@@ -63,16 +62,6 @@ const Testing = () => {
         setCreateTestModalOpen(false);
     };
 
-    const handleSearchTest = async () => {
-        const found = tests.find(test => test.code === testCode);
-        if (found) {
-            setCurrentTest(found);
-            setModalIsOpen(true); // Открываем модальное окно с найденным тестом
-        } else {
-            toast.error('Тест с таким кодом не найден.'); // Уведомление, если тест не найден
-        }
-    };
-
     return (
         <>
             <Header/>
@@ -84,15 +73,6 @@ const Testing = () => {
                 >
                     Створити тест
                 </button>
-            </div>
-            <div className="search-test">
-                <input
-                    type="text"
-                    placeholder="Введите код теста"
-                    value={testCode}
-                    onChange={(e) => setTestCode(e.target.value)}
-                />
-                <button onClick={handleSearchTest}>Продолжить</button>
             </div>
             <TestList
                 tests={tests}

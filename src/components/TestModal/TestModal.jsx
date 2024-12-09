@@ -1,11 +1,12 @@
+// TestModal.jsx
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import './_TestModal.scss';
 
 const TestModal = ({ isOpen, onRequestClose, test }) => {
-    if (!test || !Array.isArray(test.questions)) {
-        return <div>Error: Test data is unavailable or has an incorrect format.</div>;
-    }
-
+    const user = useSelector(state => state.auth.user);
     const [answers, setAnswers] = useState(Array(test.questions.length).fill(null));
     const [results, setResults] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -24,13 +25,17 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
         setAnswers(newAnswers);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!user || !user.uid) {
+            toast.error('Пользователь не авторизован');
+            return;
+        }
+
         const endTime = new Date();
         const duration = Math.floor((endTime - startTime) / 1000);
-        setElapsedTime(duration);
-
-        const correctAnswers = test.questions.map((q) => q.correctAnswerIndex);
+        const correctAnswers = test.questions.map(q => q.correctAnswerIndex);
         const results = answers.map((answer, index) => ({
             question: test.questions[index].question,
             userAnswer: answer !== null ? test.questions[index].answers[answer] : 'No answer',
@@ -40,6 +45,24 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
 
         setResults(results);
         setIsSubmitted(true);
+
+        const correctCount = results.filter(result => result.isCorrect).length;
+        const score = ((correctCount / test.questions.length) * 100).toFixed(2);
+
+        try {
+            await axios.post('http://localhost:3000/test-results', {
+                userId: user.uid,
+                testId: test.id,
+                testName: test.name,
+                score: parseFloat(score),
+                totalQuestions: test.questions.length,
+                timeTaken: duration
+            });
+            toast.success('Результати тесту збережено');
+        } catch (error) {
+            console.error('Error saving test results:', error);
+            toast.error('Помилка при збереженні результатів тесту');
+        }
     };
 
     const calculateSuccessRate = () => {
@@ -52,10 +75,7 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
     return (
         <div className="modal-overlay">
             <div className="modal">
-                <button onClick={onRequestClose} className="modal__close-button">
-                    &times;
-                </button>
-
+                <button onClick={onRequestClose} className="modal__close-button">&times;</button>
                 <h2 className="modal__title">{test.name}</h2>
                 {!isSubmitted ? (
                     <form onSubmit={handleSubmit} className="modal__form">
@@ -93,23 +113,23 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
                     </form>
                 ) : (
                     <div className="modal__results">
-                        <h3 className="modal__results-title">Results</h3>
-                        <p className="modal__success-rate">Success Rate: {calculateSuccessRate()}%</p>
+                        <h3 className="modal__results-title">Результати</h3>
+                        <p className="modal__success-rate">Відсоток успішності: {calculateSuccessRate()}%</p>
                         {elapsedTime !== null && (
                             <p className="modal__elapsed-time">
-                                You completed the test in <span>{Math.floor(elapsedTime / 60)}</span> minutes <span>{elapsedTime % 60}</span> seconds.
+                                Ви пройшли тест за <span>{Math.floor(elapsedTime / 60)}</span> хвилин <span>{elapsedTime % 60}</span> секунд.
                             </p>
                         )}
                         <ul className="modal__results-list">
                             {results.map((result, index) => (
                                 <li key={index} className="modal__result-item">
-                                    <strong className="modal__result-question">Question:</strong>
+                                    <strong className="modal__result-question">Питання:</strong>
                                     <span className="modal__question-text">{result.question}</span>
                                     <br />
-                                    <strong className="modal__result-user-answer">Your answer:</strong>
+                                    <strong className="modal__result-user-answer">Ваша відповідь:</strong>
                                     <span className="modal__user-answer">{result.userAnswer}</span>
                                     <br />
-                                    <strong className="modal__result-correct-answer">Correct answer:</strong>
+                                    <strong className="modal__result-correct-answer">Правильна відповідь:</strong>
                                     <span className="modal__correct-answer">{result.correctAnswer}</span>
                                     <br />
                                 </li>
@@ -123,4 +143,3 @@ const TestModal = ({ isOpen, onRequestClose, test }) => {
 };
 
 export default TestModal;
-

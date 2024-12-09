@@ -17,7 +17,7 @@ const Hero = () => {
 	
 	const handleClick = () => {
 		if(user) {
-			navigate('/tests')
+			navigate('/testing')
 		} else {
 			navigate('/register')
 		}

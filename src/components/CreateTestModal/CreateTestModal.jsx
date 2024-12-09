@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import './_CreateTestModal.scss';
 
-const CreateTestModal = ({ isOpen, onClose, addTest }) => {
+const CreateTestModal = ({isOpen, onClose, addTest}) => {
     const [name, setName] = useState('');
-    const [questions, setQuestions] = useState([{ question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
+    const [questions, setQuestions] = useState([{question: '', answers: [''], correctAnswerIndex: null, images: []}]);
     const [files, setFiles] = useState({});
 
     const handleAddQuestion = () => {
-        setQuestions([...questions, { question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
+        setQuestions([...questions, {question: '', answers: [''], correctAnswerIndex: null, images: []}]);
     };
 
     const handleAddAnswer = (index) => {
@@ -75,7 +75,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
             return { ...q, images: uploadedFiles };
         }));
 
-        const testData = { name, questions: updatedQuestions };
+        const testData = { name, questions: updatedQuestions, isOpen: true };
         addTest(testData);
         resetForm();
         onClose();
@@ -83,7 +83,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
 
     const resetForm = () => {
         setName('');
-        setQuestions([{ question: '', answers: [''], correctAnswerIndex: null, images: [] }]);
+        setQuestions([{question: '', answers: [''], correctAnswerIndex: null, images: []}]);
         setFiles({});
     };
 
@@ -96,7 +96,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                 <form onSubmit={handleSubmit} className="modal__form">
                     <input
                         type="text"
-                        placeholder="Test Name"
+                        placeholder="Назва тесту"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -106,7 +106,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                         <div key={questionIndex} className="modal__question">
                             <input
                                 type="text"
-                                placeholder="Question"
+                                placeholder="Питання"
                                 value={q.question}
                                 onChange={(e) => {
                                     const newQuestions = [...questions];
@@ -127,11 +127,11 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                                 onChange={() => handleCorrectAnswerChange(questionIndex, answerIndex)}
                                                 className="modal__answer-input"
                                             />
-                                            Correct Answer
+                                            Правильна відповідь
                                         </label>
                                         <input
                                             type="text"
-                                            placeholder={`Answer ${String.fromCharCode(65 + answerIndex)}`}
+                                            placeholder={`Відповідь ${String.fromCharCode(65 + answerIndex)}`}
                                             value={answer}
                                             onChange={(e) => {
                                                 const newQuestions = [...questions];
@@ -146,7 +146,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                             onClick={() => handleRemoveAnswer(questionIndex, answerIndex)}
                                             className="modal__remove-answer-button"
                                         >
-                                            Remove Answer
+                                            Видалити відповідь
                                         </button>
                                     </div>
                                 ))}
@@ -155,7 +155,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                     onClick={() => handleAddAnswer(questionIndex)}
                                     className="modal__add-answer-button"
                                 >
-                                    Add Answer
+                                    Додати відповідь
                                 </button>
                             </div>
                             <input
@@ -169,7 +169,7 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                                 onClick={() => handleRemoveQuestion(questionIndex)}
                                 className="modal__remove-question-button"
                             >
-                                Remove Question
+                                Видалити питання
                             </button>
                         </div>
                     ))}
@@ -178,10 +178,10 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
                         onClick={handleAddQuestion}
                         className="modal__add-question-button"
                     >
-                        Add Question
+                        Додати питання
                     </button>
                     <button type="submit" className="modal__submit-button">
-                        Create Test
+                        Створити тест
                     </button>
                 </form>
             </div>
@@ -190,3 +190,4 @@ const CreateTestModal = ({ isOpen, onClose, addTest }) => {
 };
 
 export default CreateTestModal;
+
